@@ -147,4 +147,4 @@ const hardDeleteNomina = async (req, res) => {
 };
 
 module.exports = { subirNomina, obtenerMisNominas, descargarNomina, obtenerTodasNominas, hardDeleteNomina };
-      
+       
