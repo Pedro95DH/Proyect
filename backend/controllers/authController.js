@@ -152,4 +152,4 @@ const subirFotoPerfil = async (req, res) => {
 };
 
 module.exports = { login, cambiarNombre, cambiarEmail, cambiarPassword, subirFotoPerfil };
-   
+    
