@@ -29,4 +29,4 @@ const nominaSchema = new mongoose.Schema(
 
 module.exports = mongoose.model("Nomina", nominaSchema);
 
-     
+      
