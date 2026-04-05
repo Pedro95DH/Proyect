@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
 const cors = require("cors");
+const usuarioRoutes = require("./routes/usuarioRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -11,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
-
+app.use("/api/usuarios", usuarioRoutes);
 // Conexión a la Base de Datos
 
 mongoose
