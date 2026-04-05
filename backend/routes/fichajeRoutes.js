@@ -24,4 +24,4 @@ router.get("/todos", verificarToken, soloRRHH, obtenerTodosFichajes);
 router.delete("/:id", verificarToken, soloRRHH, hardDeleteFichaje);
 
 module.exports = router;
- 
+  
