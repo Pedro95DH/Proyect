@@ -132,4 +132,4 @@ export class AuthService {
     return `http://localhost:3000/uploads/fotos/${filename}`;
   }
 }
- 
+  
