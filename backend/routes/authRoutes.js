@@ -40,4 +40,4 @@ router.put("/cambiar-password", verificarToken, cambiarPassword);
 router.put("/foto-perfil", verificarToken, uploadFoto.single("foto"), subirFotoPerfil);
 
 module.exports = router;
-  
+   
