@@ -1,0 +1,119 @@
+/* ──────────────────────────────────────────────
+   LOGIN COMPONENT — Estilos
+   ────────────────────────────────────────────── */
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+  padding: 16px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35) !important;
+  overflow: hidden;
+}
+
+/* Cabecera */
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px 16px;
+  background: linear-gradient(135deg, #1a237e, #3949ab);
+  color: #fff;
+
+  mat-card-title {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    margin: 8px 0 4px;
+  }
+
+  mat-card-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+    text-align: center;
+  }
+}
+
+.logo-wrapper {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  padding: 16px;
+  margin-bottom: 8px;
+}
+
+.logo-icon {
+  font-size: 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: #fff;
+}
+
+/* Contenido del formulario */
+mat-card-content {
+  padding: 24px 24px 8px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.campo-completo {
+  width: 100%;
+}
+
+/* Botón de acceso */
+.btn-acceder {
+  width: 100%;
+  height: 48px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.spinner-inline {
+  display: inline-block;
+}
+
+/* Pie de tarjeta */
+.login-footer {
+  text-align: center;
+  padding: 12px 24px 20px;
+  color: #9e9e9e;
+  font-size: 0.75rem;
+}
+
+/* Aviso contraseña temporal */
+.aviso-temporal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff8e1;
+  border-left: 4px solid #f9a825;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #5d4037;
+  margin-bottom: 16px;
+  mat-icon { color: #f9a825; font-size: 20px; width: 20px; height: 20px; }
+}
+
+/* Estilo global para el snackbar de error (se aplica en el componente) */
+:host ::ng-deep .snack-error {
+  background-color: #d32f2f;
+  color: #fff;
+}

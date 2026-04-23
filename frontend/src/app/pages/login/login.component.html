@@ -1,0 +1,131 @@
+<div class="login-container">
+
+  <mat-card class="login-card">
+
+    <!-- Cabecera -->
+    <mat-card-header class="login-header">
+      <div class="logo-wrapper">
+        <mat-icon class="logo-icon">access_time</mat-icon>
+      </div>
+      <mat-card-title>SGFN</mat-card-title>
+      <mat-card-subtitle>
+        {{ modoForzarPassword() ? 'Establece tu nueva contraseña' : 'Sistema de Gestión de Fichajes y Nóminas' }}
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <!-- ── FORMULARIO LOGIN NORMAL ─────────────────── -->
+      @if (!modoForzarPassword()) {
+        <form [formGroup]="formulario" (ngSubmit)="iniciarSesion()" novalidate>
+
+          <mat-form-field appearance="outline" class="campo-completo">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput type="email" formControlName="email"
+              placeholder="empleado@empresa.com" autocomplete="email" />
+            <mat-icon matPrefix>email</mat-icon>
+            @if (formulario.get('email')?.hasError('required') && formulario.get('email')?.touched) {
+              <mat-error>El correo es obligatorio.</mat-error>
+            }
+            @if (formulario.get('email')?.hasError('email') && formulario.get('email')?.touched) {
+              <mat-error>Introduce un correo válido.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="campo-completo">
+            <mat-label>Contraseña</mat-label>
+            <input matInput [type]="ocultarPassword() ? 'password' : 'text'"
+              formControlName="password" autocomplete="current-password" />
+            <mat-icon matPrefix>lock</mat-icon>
+            <button mat-icon-button matSuffix type="button"
+              (click)="togglePassword($event)" [attr.aria-label]="'Mostrar contraseña'">
+              <mat-icon>{{ ocultarPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (formulario.get('password')?.hasError('required') && formulario.get('password')?.touched) {
+              <mat-error>La contraseña es obligatoria.</mat-error>
+            }
+            @if (formulario.get('password')?.hasError('minlength') && formulario.get('password')?.touched) {
+              <mat-error>Mínimo 6 caracteres.</mat-error>
+            }
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit"
+            class="btn-acceder" [disabled]="formulario.invalid || cargando()">
+            @if (cargando()) {
+              <ng-container>
+                <mat-spinner diameter="20" class="spinner-inline"></mat-spinner>
+                <span>Accediendo...</span>
+              </ng-container>
+            } @else {
+              <ng-container>
+                <mat-icon>login</mat-icon>
+                <span>Acceder</span>
+              </ng-container>
+            }
+          </button>
+
+        </form>
+      }
+
+      <!-- ── FORMULARIO CAMBIO DE CONTRASEÑA FORZADO ── -->
+      @if (modoForzarPassword()) {
+        <div class="aviso-temporal">
+          <mat-icon>info</mat-icon>
+          Tu cuenta tiene una contraseña temporal. Debes establecer una nueva para continuar.
+        </div>
+        <form [formGroup]="formNuevaPassword" (ngSubmit)="guardarNuevaPassword()" novalidate>
+
+          <mat-form-field appearance="outline" class="campo-completo">
+            <mat-label>Nueva contraseña</mat-label>
+            <input matInput [type]="ocultarPassword() ? 'password' : 'text'"
+              formControlName="nuevaPassword" autocomplete="new-password" />
+            <mat-icon matPrefix>lock_reset</mat-icon>
+            <button mat-icon-button matSuffix type="button"
+              (click)="togglePassword($event)" [attr.aria-label]="'Mostrar contraseña'">
+              <mat-icon>{{ ocultarPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (formNuevaPassword.get('nuevaPassword')?.hasError('required') && formNuevaPassword.get('nuevaPassword')?.touched) {
+              <mat-error>La contraseña es obligatoria.</mat-error>
+            }
+            @if (formNuevaPassword.get('nuevaPassword')?.hasError('minlength') && formNuevaPassword.get('nuevaPassword')?.touched) {
+              <mat-error>Mínimo 6 caracteres.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="campo-completo">
+            <mat-label>Confirmar contraseña</mat-label>
+            <input matInput [type]="ocultarPassword() ? 'password' : 'text'"
+              formControlName="confirmar" autocomplete="new-password" />
+            <mat-icon matPrefix>lock</mat-icon>
+            @if (formNuevaPassword.hasError('noCoinciden') && formNuevaPassword.get('confirmar')?.touched) {
+              <mat-error>Las contraseñas no coinciden.</mat-error>
+            }
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit"
+            class="btn-acceder" [disabled]="formNuevaPassword.invalid || cargando()">
+            @if (cargando()) {
+              <ng-container>
+                <mat-spinner diameter="20" class="spinner-inline"></mat-spinner>
+                <span>Guardando...</span>
+              </ng-container>
+            } @else {
+              <ng-container>
+                <mat-icon>save</mat-icon>
+                <span>Guardar y entrar</span>
+              </ng-container>
+            }
+          </button>
+
+        </form>
+      }
+
+    </mat-card-content>
+
+    <mat-card-footer class="login-footer">
+      <small>© {{ currentYear }} SGFN &mdash; Proyecto Fin de Ciclo</small>
+    </mat-card-footer>
+
+  </mat-card>
+
+</div>
