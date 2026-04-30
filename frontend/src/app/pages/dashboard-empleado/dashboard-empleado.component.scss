@@ -1,0 +1,282 @@
+/* ──────────────────────────────────────────────
+   DASHBOARD EMPLEADO — Estilos
+   ────────────────────────────────────────────── */
+
+.chip-rol { font-size: .7rem !important; height: 20px !important; margin-left: 4px; }
+
+/* Tarjeta nóminas */
+.tarjeta-nominas { border-radius: 12px !important; }
+
+.filtro-nominas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.filtro-campo-nom {
+  flex: 1 1 140px;
+  max-width: 200px;
+}
+
+.icono-pdf {
+  color: #d32f2f;
+  vertical-align: middle;
+  margin-right: 6px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.sin-datos-sub { font-size: .8rem; margin-top: 4px; }
+
+/* ── Toolbar (mismo patrón que Admin y RRHH) ─────────────────── */
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  min-height: 56px;
+  padding: 0 8px;
+}
+
+.toolbar-icon { margin-right: 6px; flex-shrink: 0; }
+
+.toolbar-titulo {
+  font-weight: 600;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spacer { flex: 1 1 auto; min-width: 0; }
+
+.toolbar-usuario {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 4px;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  span.usuario-nombre { white-space: nowrap; }
+}
+
+/* ── Navegación botones toolbar ──────────────────────────────── */
+.nav-botones {
+  display: flex;
+  gap: 2px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  button {
+    color: rgba(255,255,255,.75);
+    min-width: unset;
+    padding: 0 8px;
+    .nav-label { margin-left: 4px; }
+    mat-icon { font-size: 18px; vertical-align: middle; }
+    &.nav-activo {
+      color: #fff;
+      background: rgba(255,255,255,.2);
+      border-radius: 4px;
+    }
+  }
+}
+
+/* ── Responsive toolbar ──────────────────────────────────────── */
+@media (max-width: 700px) {
+  .toolbar-titulo { display: none; }
+  .toolbar-icon { display: none; }
+  .chip-rol { display: none !important; }
+  .toolbar-usuario span.usuario-nombre { display: none; }
+  .nav-botones button .nav-label { display: none; }
+  .nav-botones button { padding: 0 4px; }
+  .nav-botones { margin-right: 4px; }
+}
+
+/* Contenedor principal */
+.page-content {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Fila de tarjetas superior */
+.fila-principal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tarjeta del reloj */
+.tarjeta-reloj {
+  border-radius: 12px !important;
+}
+
+.reloj-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0 24px;
+}
+
+.reloj-hora {
+  font-size: 3.5rem;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 4px;
+  color: #1a237e;
+  margin: 0;
+}
+
+/* Tarjeta de fichaje */
+.tarjeta-fichaje {
+  border-radius: 12px !important;
+  transition: border-color 0.3s ease;
+
+  &.activo {
+    border-color: #4caf50 !important;
+    border-width: 2px !important;
+  }
+}
+
+.icono-activo {
+  color: #4caf50 !important;
+  animation: pulso 1.5s infinite;
+}
+
+@keyframes pulso {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.fichaje-content {
+  display: flex;
+  justify-content: center;
+  padding: 16px 0 24px;
+}
+
+.btn-fichaje {
+  width: 100%;
+  max-width: 280px;
+  height: 56px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 28px !important;
+}
+
+.fichaje-estado {
+  display: flex;
+  justify-content: center;
+  padding: 8px 16px 16px;
+}
+
+/* Tarjeta del historial */
+.tarjeta-historial {
+  border-radius: 12px !important;
+}
+
+.tabla-wrapper {
+  overflow-x: auto;
+}
+
+.tabla-fichajes {
+  width: 100%;
+}
+
+.cargando-centro {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.sin-datos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  color: #9e9e9e;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
+  }
+}
+
+/* Perfil */
+.tarjeta-perfil { border-radius: 12px !important; max-width: 520px; }
+
+.avatar-perfil {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e0e0e0;
+}
+
+.perfil-main-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 16px 16px;
+}
+
+.perfil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.campo-ancho { width: 100%; }
+.perfil-acciones { display: flex; gap: 8px; margin-top: 4px; }
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  color: #555;
+  mat-icon { font-size: 20px; width: 20px; height: 20px; color: #9e9e9e; }
+}
+
+/* Chips de horas en la tabla */
+.hora-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+
+  &.entrada {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &.salida {
+    background: #fce4ec;
+    color: #c62828;
+  }
+
+  &.pendiente {
+    color: #9e9e9e;
+  }
+}
