@@ -1,0 +1,305 @@
+/* ── Toolbar ─────────────────────────────────────────────────── */
+.toolbar {
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  background-color: #1b5e20 !important;
+  color: #fff !important;
+  min-height: 56px;
+  padding: 0 8px;
+}
+.toolbar-icon { margin-right: 6px; flex-shrink: 0; }
+.toolbar-titulo { font-weight: 600; font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.spacer { flex: 1 1 auto; min-width: 0; }
+.toolbar-usuario {
+  display: flex; align-items: center; gap: 4px;
+  margin-right: 4px; font-size: .9rem;
+  flex-shrink: 0;
+  span.usuario-nombre { white-space: nowrap; }
+}
+.chip-rol { font-size: .7rem !important; height: 20px !important; }
+
+/* ── Navegación botones toolbar ──────────────────────────────── */
+.nav-botones {
+  display: flex;
+  gap: 2px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  button {
+    color: rgba(255,255,255,.75);
+    min-width: unset;
+    padding: 0 8px;
+    .nav-label { margin-left: 4px; }
+    mat-icon { font-size: 18px; vertical-align: middle; }
+    &.nav-activo {
+      color: #fff;
+      background: rgba(255,255,255,.15);
+      border-radius: 4px;
+    }
+  }
+}
+
+/* ── Responsive toolbar ──────────────────────────────────────── */
+@media (max-width: 700px) {
+  .toolbar-titulo { display: none; }
+  .toolbar-icon { display: none; }
+  .chip-rol { display: none !important; }
+  .toolbar-usuario span.usuario-nombre { display: none; }
+  .nav-botones button .nav-label { display: none; }
+  .nav-botones button { padding: 0 4px; }
+  .nav-botones { margin-right: 4px; }
+}
+
+/* ── Contenedor general ──────────────────────────────────────── */
+.page-content {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Vista Fichaje ───────────────────────────────────────────── */
+.fichaje-card {
+  border-radius: 12px !important;
+}
+
+.fichaje-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 32px 16px !important;
+}
+
+.reloj {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  .hora {
+    font-size: 3rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 2px;
+    color: #1565c0;
+  }
+  .fecha {
+    font-size: .95rem;
+    color: #616161;
+    text-transform: capitalize;
+  }
+}
+
+.estado-fichaje {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  color: #555;
+}
+
+.icono-activo { color: #4caf50 !important; animation: pulso 1.5s infinite; }
+@keyframes pulso { 0%,100% { opacity:1 } 50% { opacity:.4 } }
+
+.btn-fichaje {
+  height: 48px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0 28px;
+  border-radius: 24px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-toggle-auditoria {
+  margin-left: auto;
+}
+
+/* ── Vista Nóminas ───────────────────────────────────────────── */
+.acciones-nominas {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.nomina-form-card { border-radius: 12px !important; }
+
+.nomina-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 8px;
+  mat-form-field { flex: 1 1 160px; }
+}
+.archivo-selector { display: flex; align-items: center; padding-top: 4px; }
+.nomina-acciones { display: flex; gap: 8px; align-items: center; margin-top: 4px; }
+
+/* ── Vista Empleados — barra de búsqueda + acciones ─────────── */
+.acciones-card {
+  border-radius: 12px !important;
+  mat-card-content { padding-bottom: 8px !important; }
+}
+
+.acciones-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.buscador {
+  flex: 1 1 280px;
+  min-width: 240px;
+}
+
+.botones-accion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding-top: 4px;
+}
+
+/* ── Formulario crear/editar ─────────────────────────────────── */
+.form-card, .tabla-card, .perfil-card { border-radius: 12px !important; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+  margin-top: 8px;
+  @media (max-width: 700px) { grid-template-columns: 1fr; }
+}
+.full-col { grid-column: 1 / -1; }
+.form-acciones { display: flex; gap: 8px; margin-top: 4px; }
+
+/* ── Filtros auditoría ───────────────────────────────────────── */
+.filtros-form {
+  display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; margin-bottom: 8px;
+}
+.filtro-campo { flex: 1 1 160px; }
+
+/* ── Tabla ───────────────────────────────────────────────────── */
+.tabla-wrapper { overflow-x: auto; }
+.tabla { width: 100%; }
+
+.fila-seleccionada { background: #e3f2fd !important; }
+.fila-inactiva { opacity: .5; background: #fafafa; }
+.apellidos { color: #757575; }
+
+.cargando { display: flex; justify-content: center; padding: 40px 0; }
+
+.sin-datos {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 40px 0; color: #9e9e9e;
+  mat-icon { font-size: 48px; width: 48px; height: 48px; margin-bottom: 8px; }
+}
+
+.sin-resultados {
+  text-align: center;
+  padding: 24px 0;
+  color: #9e9e9e;
+  mat-icon { vertical-align: middle; margin-right: 6px; }
+}
+
+/* ── Buscadores en nóminas y auditoría ─────────────────────────────────── */
+.buscador-nominas, .buscador-auditoria { width: 100%; max-width: 400px; }
+
+.filtros-nominas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+.filtro-nom-campo { flex: 1 1 120px; max-width: 160px; }
+
+/* ── Resumen de horas ────────────────────────────────────────────────────── */
+.resumen-horas-card { border-radius: 12px !important; }
+
+.tabla-resumen {
+  width: 100%;
+  border-collapse: collapse;
+  th, td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: .9rem;
+  }
+  th { font-weight: 600; color: #424242; background: #f5f5f5; }
+  tr:last-child td { border-bottom: none; }
+}
+
+/* ── Hora chips ──────────────────────────────────────────────── */
+.hora-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: .85rem; padding: 2px 6px; border-radius: 4px;
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+  &.entrada  { background: #e8f5e9; color: #2e7d32; }
+  &.salida   { background: #fce4ec; color: #c62828; }
+  &.pendiente { color: #9e9e9e; }
+}
+
+/* ── Perfil ──────────────────────────────────────────────────── */
+.perfil-card { max-width: 520px; }
+
+.perfil-info {
+  .info-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 0; color: #555;
+    mat-icon { font-size: 20px; width: 20px; height: 20px; color: #9e9e9e; }
+  }
+}
+
+.perfil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.campo-ancho { width: 100%; }
+.perfil-acciones { display: flex; gap: 8px; margin-top: 4px; }
+
+/* ── Avatar perfil propio ──────────────────────────────────────── */
+.avatar-perfil {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e0e0e0;
+}
+
+/* ── Foto de perfil ──────────────────────────────────────────── */
+.foto-tabla {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+  vertical-align: middle;
+}
+.foto-placeholder { color: #bdbdbd; font-size: 36px; width: 36px; height: 36px; vertical-align: middle; }
+
+.foto-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  .foto-label { font-size: .9rem; color: #616161; }
+  .foto-preview {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e0e0e0;
+  }
+}
+
+.perfil-main-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 16px 16px;
+}

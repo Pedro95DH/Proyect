@@ -1,0 +1,120 @@
+/* Tema de Angular Material (índigo + rosa es el default; aquí usamos indigo-pink) */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Fuente base de Material Design */
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
+/* Estilos globales del snackbar de error */
+.snack-error {
+  --mdc-snackbar-container-color: #d32f2f;
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+/* Asegurar que el router-outlet ocupe toda la pantalla */
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
+/* ── Chips de rol ──────────────────────────────────────────────── */
+/* Admin: negro */
+.chip-admin.mat-mdc-chip.mat-mdc-chip-highlighted,
+.chip-admin.mat-mdc-chip {
+  --mdc-chip-elevated-container-color: #212121 !important;
+  --mdc-chip-elevated-selected-container-color: #212121 !important;
+  --mdc-chip-label-text-color: #fff !important;
+  --mdc-chip-selected-label-text-color: #fff !important;
+}
+/* RRHH: verde */
+.chip-rrhh.mat-mdc-chip.mat-mdc-chip-highlighted,
+.chip-rrhh.mat-mdc-chip {
+  --mdc-chip-elevated-container-color: #1b5e20 !important;
+  --mdc-chip-elevated-selected-container-color: #1b5e20 !important;
+  --mdc-chip-label-text-color: #fff !important;
+  --mdc-chip-selected-label-text-color: #fff !important;
+}
+
+/* ── Responsive global ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .page-content {
+    padding: 0 8px !important;
+    margin: 12px auto !important;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .full-col {
+    grid-column: 1 !important;
+  }
+
+  .fila-principal {
+    grid-template-columns: 1fr !important;
+  }
+
+  .nav-botones {
+    flex-wrap: wrap;
+    gap: 2px !important;
+    button span { display: none; }
+  }
+
+  .tabla-wrapper {
+    overflow-x: auto;
+  }
+
+  .tabla {
+    min-width: 480px;
+  }
+
+  .acciones-top {
+    flex-direction: column !important;
+  }
+
+  .botones-accion {
+    flex-direction: column !important;
+    width: 100%;
+    button { width: 100%; }
+  }
+
+  .buscador {
+    min-width: 100% !important;
+  }
+
+  .filtros-nominas,
+  .filtros-form {
+    flex-direction: column !important;
+    .filtro-nom-campo,
+    .filtro-campo { max-width: 100% !important; flex: 1 1 100% !important; }
+  }
+
+  .perfil-card {
+    max-width: 100% !important;
+  }
+
+  .perfil-main-actions {
+    flex-direction: column;
+    button { width: 100%; }
+  }
+
+  .nomina-grid {
+    flex-direction: column;
+    mat-form-field { flex: 1 1 100%; }
+  }
+}
+
+@media (max-width: 480px) {
+  .reloj-hora, .reloj .hora {
+    font-size: 2.5rem !important;
+    letter-spacing: 2px !important;
+  }
+
+  .btn-fichaje {
+    max-width: 100% !important;
+  }
+}

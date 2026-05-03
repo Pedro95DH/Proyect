@@ -1,0 +1,425 @@
+<!-- Barra de navegación superior -->
+<mat-toolbar color="warn" class="toolbar">
+  <mat-icon class="toolbar-icon">admin_panel_settings</mat-icon>
+  <span class="toolbar-titulo">SGFN — Panel de Administración</span>
+  <span class="spacer"></span>
+
+  <!-- Navegación principal -->
+  <div class="nav-botones">
+    <button mat-button [class.nav-activo]="vistaActiva() === 'empleados'" (click)="irA('empleados')">
+      <mat-icon>group</mat-icon><span class="nav-label">Usuarios</span>
+    </button>
+    <button mat-button [class.nav-activo]="vistaActiva() === 'perfil'" (click)="irA('perfil')">
+      <mat-icon>account_circle</mat-icon><span class="nav-label">Perfil</span>
+    </button>
+  </div>
+
+  <span class="toolbar-usuario">
+    <mat-icon>shield</mat-icon>
+    <span class="usuario-nombre">{{ usuario?.nombre }}</span>
+    <mat-chip highlighted color="warn" class="chip-rol">ADMIN</mat-chip>
+  </span>
+  <button mat-icon-button (click)="cerrarSesion()" matTooltip="Cerrar sesión">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<!-- Vista: gestión de empleados -->
+@if (vistaActiva() === 'empleados') {
+
+  <!-- Formulario crear / editar -->
+  @if (modoForm() !== null) {
+    <div class="page-content">
+      <mat-card appearance="outlined" class="form-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>{{ modoForm() === 'crear' ? 'person_add' : 'edit' }}</mat-icon>
+          <mat-card-title>{{ modoForm() === 'crear' ? 'Añadir usuario' : 'Modificar usuario' }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="formEmpleado" (ngSubmit)="guardarEmpleado()" novalidate class="form-grid">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre *</mat-label>
+              <input matInput formControlName="nombre" />
+              @if (formEmpleado.get('nombre')?.hasError('required') && formEmpleado.get('nombre')?.touched) {
+                <mat-error>Obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Apellidos</mat-label>
+              <input matInput formControlName="apellidos" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>DNI *</mat-label>
+              <input matInput formControlName="dni" placeholder="12345678A" />
+              @if (formEmpleado.get('dni')?.hasError('pattern') && formEmpleado.get('dni')?.touched) {
+                <mat-error>Formato: 8 dígitos + letra mayúscula</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email *</mat-label>
+              <input matInput type="email" formControlName="email" />
+              @if (formEmpleado.get('email')?.hasError('email') && formEmpleado.get('email')?.touched) {
+                <mat-error>Email no válido</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Teléfono</mat-label>
+              <input matInput formControlName="telefono" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Cargo</mat-label>
+              <input matInput formControlName="cargo" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-col">
+              <mat-label>Dirección</mat-label>
+              <input matInput formControlName="direccion" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{ modoForm() === 'crear' ? 'Contraseña *' : 'Nueva contraseña (opcional)' }}</mat-label>
+              <input matInput type="password" formControlName="password" autocomplete="new-password" />
+              @if (formEmpleado.get('password')?.hasError('required') && formEmpleado.get('password')?.touched) {
+                <mat-error>Obligatoria al crear</mat-error>
+              }
+              @if (formEmpleado.get('password')?.hasError('minlength') && formEmpleado.get('password')?.touched) {
+                <mat-error>Mínimo 6 caracteres</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Rol</mat-label>
+              <mat-select formControlName="rol">
+                <mat-option value="EMPLEADO">EMPLEADO</mat-option>
+                <mat-option value="RRHH">RRHH</mat-option>
+                <mat-option value="ADMIN">ADMIN</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- Foto de perfil -->
+            <div class="foto-selector full-col">
+              <span class="foto-label">Foto de perfil (opcional)</span>
+              <button mat-stroked-button type="button" (click)="fotoInput.click()">
+                <mat-icon>photo_camera</mat-icon>
+                {{ fotoSeleccionada() ? fotoSeleccionada()!.name : 'Seleccionar imagen' }}
+              </button>
+              <input #fotoInput type="file" accept="image/*" hidden (change)="onFotoSeleccionada($event)" />
+              @if (modoForm() === 'editar' && empleadoEditando()?.fotoPerfil) {
+                <img [src]="usuarioService.urlFoto(empleadoEditando()!.fotoPerfil!)"
+                     alt="Foto actual" class="foto-preview" />
+              }
+            </div>
+
+            <div class="form-acciones full-col">
+              <button mat-raised-button color="warn" type="submit" [disabled]="formEmpleado.invalid">
+                <mat-icon>save</mat-icon>
+                Aceptar
+              </button>
+              <button mat-stroked-button type="button" (click)="cancelarForm()">
+                <mat-icon>cancel</mat-icon> Cancelar
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  <!-- Lista de empleados -->
+  @if (modoForm() === null) {
+    <div class="page-content">
+
+      <!-- Barra de búsqueda + acciones contextuales -->
+      <mat-card appearance="outlined" class="acciones-card">
+        <mat-card-content>
+          <div class="acciones-top">
+            <!-- Buscador en tiempo real -->
+            <mat-form-field appearance="outline" class="buscador">
+              <mat-label>Buscar empleado</mat-label>
+              <mat-icon matPrefix>search</mat-icon>
+              <input matInput (input)="filtrar($event)" placeholder="Nombre, DNI, email, cargo, rol..." />
+            </mat-form-field>
+
+            <!-- Botones de acción -->
+            <div class="botones-accion">
+              <button mat-raised-button color="warn" (click)="abrirFormCrear()">
+                <mat-icon>person_add</mat-icon> Añadir usuario
+              </button>
+
+              @if (empleadoSeleccionado) {
+                <button mat-stroked-button color="warn" (click)="abrirFormEditar()">
+                  <mat-icon>edit</mat-icon> Modificar usuario
+                </button>
+
+                @if (empleadoSeleccionado.rol !== 'ADMIN') {
+                  @if (empleadoSeleccionado.activo) {
+                    <button mat-stroked-button (click)="bajaLogica()">
+                      <mat-icon>person_off</mat-icon> Dar de baja
+                    </button>
+                  } @else {
+                    <button mat-stroked-button color="primary" (click)="reactivar()">
+                      <mat-icon>person</mat-icon> Dar de alta
+                    </button>
+                  }
+
+                  <!-- Borrado físico: exclusivo del ADMIN, no aplicable a otros ADMIN -->
+                  <button mat-flat-button color="warn" (click)="hardDelete()" class="btn-hard-delete"
+                          matTooltip="Borrado irreversible (LOPD/GDPR)">
+                    <mat-icon>delete_forever</mat-icon> Eliminar usuario
+                  </button>
+                }
+              }
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Tabla de empleados con sort y paginación -->
+      <mat-card appearance="outlined" class="tabla-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>group</mat-icon>
+          <mat-card-title>Usuarios</mat-card-title>
+          <mat-card-subtitle>
+            {{ dataSource.filteredData.length }} resultado(s) de {{ dataSource.data.length }} empleado(s)
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content class="tabla-wrapper">
+          @if (cargandoEmpleados()) {
+            <div class="cargando"><mat-spinner diameter="40"></mat-spinner></div>
+          } @else if (dataSource.data.length === 0) {
+            <div class="sin-datos">
+              <mat-icon>group_off</mat-icon>
+              <p>No hay empleados registrados.</p>
+            </div>
+          } @else {
+            <table mat-table [dataSource]="dataSource" matSort #sortEmpleados="matSort" class="tabla">
+
+              <!-- Checkbox de selección única -->
+              <ng-container matColumnDef="sel">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let emp">
+                  <mat-checkbox
+                    [checked]="selection.isSelected(emp)"
+                    (change)="selection.isSelected(emp) ? selection.deselect(emp) : selection.select(emp)"
+                    (click)="$event.stopPropagation()">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <!-- Foto -->
+              <ng-container matColumnDef="foto">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let emp">
+                  @if (emp.fotoPerfil) {
+                    <img [src]="usuarioService.urlFoto(emp.fotoPerfil)" alt="Foto" class="foto-tabla" />
+                  } @else {
+                    <mat-icon class="foto-placeholder">account_circle</mat-icon>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Nombre -->
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+                <td mat-cell *matCellDef="let emp">
+                  <strong>{{ emp.nombre }}</strong>
+                  @if (emp.apellidos) { <span class="apellidos"> {{ emp.apellidos }}</span> }
+                </td>
+              </ng-container>
+
+              <!-- DNI -->
+              <ng-container matColumnDef="dni">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>DNI</th>
+                <td mat-cell *matCellDef="let emp">{{ emp.dni ?? '—' }}</td>
+              </ng-container>
+
+              <!-- Email -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                <td mat-cell *matCellDef="let emp">{{ emp.email }}</td>
+              </ng-container>
+
+              <!-- Cargo -->
+              <ng-container matColumnDef="cargo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
+                <td mat-cell *matCellDef="let emp">{{ emp.cargo || '—' }}</td>
+              </ng-container>
+
+              <!-- Rol -->
+              <ng-container matColumnDef="rol">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Rol</th>
+                <td mat-cell *matCellDef="let emp">
+                  <mat-chip highlighted
+                    [class.chip-admin]="emp.rol === 'ADMIN'"
+                    [class.chip-rrhh]="emp.rol === 'RRHH'"
+                    [color]="emp.rol === 'ADMIN' ? 'warn' : emp.rol === 'RRHH' ? 'accent' : 'primary'">
+                    {{ emp.rol }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Estado -->
+              <ng-container matColumnDef="estado">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+                <td mat-cell *matCellDef="let emp">
+                  <mat-chip [color]="emp.activo ? 'primary' : 'warn'" highlighted>
+                    {{ emp.activo ? 'Activo' : 'Baja' }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="colsEmpleados; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: colsEmpleados;"
+                  [class.fila-seleccionada]="selection.isSelected(row)"
+                  [class.fila-inactiva]="!row.activo"
+                  (click)="selection.isSelected(row) ? selection.deselect(row) : selection.select(row)">
+              </tr>
+
+              <!-- Fila de "sin resultados" cuando el filtro no encuentra nada -->
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell sin-resultados" [attr.colspan]="colsEmpleados.length">
+                  <mat-icon>search_off</mat-icon>
+                  Sin resultados para "<strong>{{ dataSource.filter }}</strong>"
+                </td>
+              </tr>
+            </table>
+
+            <!-- Paginación -->
+            <mat-paginator
+              #paginadorEmpleados
+              [pageSizeOptions]="[10, 25, 50]"
+              pageSize="10"
+              showFirstLastButtons
+              aria-label="Seleccionar página de empleados">
+            </mat-paginator>
+          }
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  }
+}
+
+<!-- Vista: perfil del administrador -->
+@if (vistaActiva() === 'perfil') {
+  <div class="page-content">
+
+    <!-- Datos del usuario + botones de acción -->
+    <mat-card appearance="outlined" class="perfil-card perfil-info">
+      <mat-card-header>
+        @if (usuario?.fotoPerfil) {
+          <img mat-card-avatar [src]="authService.urlFoto(usuario!.fotoPerfil!)" alt="Foto" class="avatar-perfil" />
+        } @else {
+          <mat-icon mat-card-avatar>shield</mat-icon>
+        }
+        <mat-card-title>{{ usuario?.nombre }}</mat-card-title>
+        <mat-card-subtitle>Administrador del sistema</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-row"><mat-icon>badge</mat-icon><span>Nombre: <strong>{{ usuario?.nombre }}{{ usuario?.apellidos ? ' ' + usuario?.apellidos : '' }}</strong></span></div>
+        <div class="info-row"><mat-icon>email</mat-icon><span>Email: <strong>{{ usuario?.email }}</strong></span></div>
+        <div class="info-row"><mat-icon>verified_user</mat-icon><span>Rol: <strong>ADMIN</strong></span></div>
+      </mat-card-content>
+      <mat-card-actions class="perfil-main-actions">
+        <button mat-stroked-button color="warn" (click)="mostrarFormEmail.update(v => !v)">
+          <mat-icon>email</mat-icon> Cambiar email
+        </button>
+        <button mat-stroked-button color="warn" (click)="mostrarFormPassword.update(v => !v)">
+          <mat-icon>lock_reset</mat-icon> Cambiar contraseña
+        </button>
+        <button mat-stroked-button color="warn" (click)="fotoPerfilInput.click()" [disabled]="subiendoFoto()">
+          @if (subiendoFoto()) { <mat-spinner diameter="20"></mat-spinner> }
+          @else { <mat-icon>photo_camera</mat-icon> }
+          Cambiar foto de perfil
+        </button>
+        <input #fotoPerfilInput type="file" accept="image/*" hidden (change)="subirFotoPropia($event)" />
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Cambiar email (condicional) -->
+    @if (mostrarFormEmail()) {
+      <mat-card appearance="outlined" class="perfil-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>email</mat-icon>
+          <mat-card-title>Cambiar email</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="formEmail" (ngSubmit)="guardarEmail()" novalidate class="perfil-form">
+            <mat-form-field appearance="outline" class="campo-ancho">
+              <mat-label>Nuevo email</mat-label>
+              <input matInput type="email" formControlName="email" autocomplete="email" />
+              @if (formEmail.get('email')?.hasError('required') && formEmail.get('email')?.touched) {
+                <mat-error>Obligatorio</mat-error>
+              }
+              @if (formEmail.get('email')?.hasError('email') && formEmail.get('email')?.touched) {
+                <mat-error>Email no válido</mat-error>
+              }
+            </mat-form-field>
+            <div class="perfil-acciones">
+              <button mat-raised-button color="warn" type="submit" [disabled]="formEmail.invalid || guardandoPerfil()">
+                @if (guardandoPerfil()) { <mat-spinner diameter="20"></mat-spinner> }
+                @else { <mat-icon>save</mat-icon> }
+                Aceptar
+              </button>
+              <button mat-stroked-button type="button" (click)="mostrarFormEmail.set(false); formEmail.reset()">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Cambiar contraseña (condicional) -->
+    @if (mostrarFormPassword()) {
+      <mat-card appearance="outlined" class="perfil-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>lock_reset</mat-icon>
+          <mat-card-title>Cambiar contraseña</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="formPassword" (ngSubmit)="guardarPassword()" novalidate class="perfil-form">
+            <mat-form-field appearance="outline" class="campo-ancho">
+              <mat-label>Contraseña actual</mat-label>
+              <input matInput type="password" formControlName="passwordActual" autocomplete="current-password" />
+              @if (formPassword.get('passwordActual')?.hasError('required') && formPassword.get('passwordActual')?.touched) {
+                <mat-error>Obligatoria</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="campo-ancho">
+              <mat-label>Nueva contraseña</mat-label>
+              <input matInput type="password" formControlName="passwordNueva" autocomplete="new-password" />
+              @if (formPassword.get('passwordNueva')?.hasError('minlength') && formPassword.get('passwordNueva')?.touched) {
+                <mat-error>Mínimo 6 caracteres</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="campo-ancho">
+              <mat-label>Confirmar nueva contraseña</mat-label>
+              <input matInput type="password" formControlName="passwordConfirmar" autocomplete="new-password" />
+              @if (formPassword.hasError('noCoinciden') && formPassword.get('passwordConfirmar')?.touched) {
+                <mat-error>Las contraseñas no coinciden</mat-error>
+              }
+            </mat-form-field>
+            <div class="perfil-acciones">
+              <button mat-raised-button color="warn" type="submit"
+                      [disabled]="formPassword.invalid || guardandoPerfil()">
+                @if (guardandoPerfil()) { <mat-spinner diameter="20"></mat-spinner> }
+                @else { <mat-icon>lock</mat-icon> }
+                Aceptar
+              </button>
+              <button mat-stroked-button type="button" (click)="mostrarFormPassword.set(false); formPassword.reset()">Cancelar</button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    }
+
+  </div>
+}
